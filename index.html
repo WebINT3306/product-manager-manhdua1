@@ -29,6 +29,7 @@
 </body>
 
 <script>
+  // Load Json
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -49,7 +50,48 @@
       });
     }
   };
-xhr.open('GET', 'products.json');
-xhr.send();
+  xhr.open('GET', 'products.json');
+  xhr.send();
+
+  // Add
+  document.getElementById('btn-add').addEventListener('click', function() {
+    const name = document.getElementById('input-name').value.trim();
+    const category = document.getElementById('input-category').value.trim();
+    const price = document.getElementById('input-price').value;
+    const quantity = parseInt(document.getElementById('input-quantity').value);
+
+    if (name.length <= 3) {
+      alert("Tên sản phẩm: không được rỗng, ít nhất 3 ký tự");
+      return;
+    }
+
+    if (price < 0) {
+      alert("Đơn giá: phải là số dương");
+      return;
+    }
+
+    if (isNaN(quantity) || quantity < 1 || !Number.isInteger(quantity)) {
+      alert("Số lượng: phải là số nguyên ≥ 1");
+      return;
+    }
+
+    const tbody = document.querySelector('#product-table tbody');
+    const rowCount = tbody.querySelectorAll('tr').length;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${rowCount + 1}</td>
+      <td>${name}</td>
+      <td>${category}</td>
+      <td>${price.toLocaleString('vi-VN')} ₫</td>
+      <td>${quantity}</td>
+    `;
+    tbody.appendChild(tr);
+
+    document.getElementById('input-name').value     = '';
+    document.getElementById('input-category').value = '';
+    document.getElementById('input-price').value    = '';
+    document.getElementById('input-quantity').value = '';
+  })
 </script>
 </html>
